@@ -4,14 +4,29 @@ import path from 'path';
 import {defineConfig} from 'vite';
 
 const getBase = () => {
-  if (process.env.BASE_PATH) {
-    const b = process.env.BASE_PATH;
-    return b.endsWith('/') ? b : `${b}/`;
+  // 1. Explicit BASE_PATH (e.g. from GitHub Actions configure-pages or CLI)
+  if (process.env.BASE_PATH !== undefined) {
+    const raw = process.env.BASE_PATH.trim();
+    if (raw === '' || raw === '/') return '/';
+    return raw.endsWith('/') ? raw : `${raw}/`;
   }
-  if (process.env.GITHUB_REPOSITORY) {
-    const repo = process.env.GITHUB_REPOSITORY.split('/')[1];
-    return repo ? `/${repo}/` : './';
+
+  // 2. Deployment-aware detection for GitHub Actions / GitHub Pages
+  const repoFull = process.env.GITHUB_REPOSITORY;
+  if (repoFull) {
+    const parts = repoFull.split('/');
+    const owner = parts[0] || '';
+    const repository = parts[1] || '';
+    const isUserSite = repository.toLowerCase() === `${owner.toLowerCase()}.github.io`;
+    // If it's a user or organization site (e.g. https://haider699-hue.github.io/), base is "/"
+    if (isUserSite) {
+      return '/';
+    }
+    // If it's a project site (e.g. https://haider699-hue.github.io/zorkcraft/), base is "/zorkcraft/"
+    return `/${repository}/`;
   }
+
+  // 3. Fallback for static hosting, docs directory, or local preview
   return './';
 };
 

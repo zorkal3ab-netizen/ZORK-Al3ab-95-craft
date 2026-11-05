@@ -30,18 +30,18 @@ export class ErrorBoundary extends Component<Props, State> {
             !
           </div>
           <h1 className="text-xl sm:text-2xl font-bold text-white mb-2">
-            ZORK CRAFT — تم استعادة الصفحة
+            تعذر تشغيل الموقع بشكل صحيح.
           </h1>
           <p className="text-sm text-slate-400 max-w-md mb-6 leading-relaxed">
-            حدث خطأ غير متوقع أثناء عرض الصفحة. يمكنك إعادة التحميل للعودة إلى الصفحة الرئيسية.
+            حدث خطأ أثناء تحميل التطبيق. يرجى تحديث الصفحة أو المحاولة مرة أخرى.
           </p>
           <button
             onClick={() => {
-              window.location.href = window.location.origin + window.location.pathname;
+              window.location.reload();
             }}
             className="px-6 py-2.5 bg-gradient-to-r from-[#FF284A] to-[#FF791F] text-white text-sm font-semibold rounded-xl hover:opacity-95 transition-all shadow-[0_0_20px_rgba(255,40,74,0.3)] cursor-pointer"
           >
-            إعادة تحميل الموقع
+            إعادة المحاولة
           </button>
         </div>
       );
