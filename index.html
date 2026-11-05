@@ -14,7 +14,20 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&family=Tajawal:wght@400;500;700;800&family=Plus+Jakarta+Sans:wght@500;700;800&display=swap" rel="stylesheet" />
     <script type="text/javascript">
-      // GitHub Pages SPA router redirect handler
+      // 1. Dynamic base href calculation for GitHub Pages & custom domains
+      (function() {
+        var l = window.location;
+        var baseHref = l.origin + '/';
+        if (l.hostname.endsWith('github.io')) {
+          var parts = l.pathname.split('/').filter(Boolean);
+          if (parts.length > 0) {
+            baseHref = l.origin + '/' + parts[0] + '/';
+          }
+        }
+        document.write('<base href="' + baseHref + '">');
+      })();
+
+      // 2. GitHub Pages SPA router redirect handler
       (function(l) {
         if (l.search[1] === '/' ) {
           var decoded = l.search.slice(1).split('&').map(function(s) { 
