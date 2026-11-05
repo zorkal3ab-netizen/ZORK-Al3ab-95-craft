@@ -16,7 +16,11 @@ export default function App() {
   // Subscription gate state (shown once per session)
   const [hasConfirmedSubscription, setHasConfirmedSubscription] = useState<boolean>(() => {
     if (typeof window !== 'undefined') {
-      return sessionStorage.getItem('zork_subscription_confirmed') === 'true';
+      try {
+        return sessionStorage.getItem('zork_subscription_confirmed') === 'true';
+      } catch {
+        return false;
+      }
     }
     return false;
   });
@@ -49,7 +53,12 @@ export default function App() {
 
   // Verify server-side owner session
   const verifyOwnerSession = useCallback(async () => {
-    const token = localStorage.getItem('zork_admin_token') || sessionStorage.getItem('zork_admin_token');
+    let token: string | null = null;
+    try {
+      token = localStorage.getItem('zork_admin_token') || sessionStorage.getItem('zork_admin_token');
+    } catch {
+      token = null;
+    }
     if (!token) {
       setIsServerVerifiedOwner(false);
       return;
